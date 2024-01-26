@@ -98,19 +98,34 @@ const spawnEnemies = () => {
     };
 
     enemies.push(new Enemy(x, y, radius, color, velocity));
-  }, 1000);
+  }, 3000);
 };
 
 const animate = () => {
   const animationId = requestAnimationFrame(animate);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   player.draw();
-  projectiles.forEach((projectile) => {
+
+  projectiles.forEach((projectile, projectileIdx) => {
     projectile.update();
+
+    // remove projectile if they are out of canvas
+    if (
+      projectile.x + projectile.radius < 0 ||
+      projectile.x - projectile.radius > canvas.width ||
+      projectile.y + projectile.radius < 0 ||
+      projectile.y - projectile.radius > canvas.height
+    ) {
+      setTimeout(() => {
+        projectiles.splice(projectileIdx, 1);
+      }, 0);
+    }
   });
+
   enemies.forEach((enemy, enemyIdx) => {
     enemy.update();
 
+    // end game when enemy hits the player
     const playerEnemydist = Math.hypot(player.x - enemy.x, player.y - enemy.y);
 
     if (playerEnemydist - enemy.radius - player.radius < 1) {
@@ -118,6 +133,7 @@ const animate = () => {
     }
 
     projectiles.forEach((projectile, projectileIdx) => {
+      // remove enemy if projectile hits it
       const projectileEnemydist = Math.hypot(
         projectile.x - enemy.x,
         projectile.y - enemy.y
