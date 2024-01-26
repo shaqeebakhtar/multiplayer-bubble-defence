@@ -9,11 +9,19 @@
       html,
       :root {
         height: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       }
     </style>
   </head>
   <body>
+    <div
+      class="absolute top-4 right-4 z-50 bg-white/10 py-1 px-2 text-2xl font-bold rounded-md text-center text-white select-none"
+    >
+      <span id="score">000</span>
+    </div>
     <canvas id="canvas" class="w-full h-full"></canvas>
+
+    <!-- scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"

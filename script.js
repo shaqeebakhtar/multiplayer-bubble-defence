@@ -1,4 +1,5 @@
 const canvas = document.querySelector('#canvas');
+const scoreElement = document.querySelector('#score');
 
 const ctx = canvas.getContext('2d');
 
@@ -134,8 +135,11 @@ const spawnEnemies = () => {
   }, 1000);
 };
 
+let score = 0;
+let animationId;
+
 const animate = () => {
-  const animationId = requestAnimationFrame(animate);
+  animationId = requestAnimationFrame(animate);
   ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   player.draw();
@@ -182,6 +186,10 @@ const animate = () => {
       );
 
       if (projectileEnemydist - enemy.radius - projectile.radius < 1) {
+        // increase score
+        score += 100;
+        scoreElement.innerText = score;
+
         // create explosion
         for (let i = 0; i < enemy.radius * 2; i++) {
           particles.push(
@@ -200,6 +208,9 @@ const animate = () => {
 
         // shrink enemies on hit
         if (enemy.radius - 10 > 5) {
+          score += 100;
+          scoreElement.innerText = score;
+
           gsap.to(enemy, {
             radius: enemy.radius - 10,
           });
@@ -207,6 +218,8 @@ const animate = () => {
             projectiles.splice(projectileIdx, 1);
           }, 0);
         } else {
+          score += 250;
+          scoreElement.innerText = score;
           setTimeout(() => {
             enemies.splice(enemyIdx, 1);
             projectiles.splice(projectileIdx, 1);
