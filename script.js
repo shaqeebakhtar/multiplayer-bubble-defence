@@ -141,10 +141,20 @@ const animate = () => {
       );
 
       if (projectileEnemydist - enemy.radius - projectile.radius < 1) {
-        setTimeout(() => {
-          enemies.splice(enemyIdx, 1);
-          projectiles.splice(projectileIdx, 1);
-        }, 0);
+        // shrink enemies on hit
+        if (enemy.radius - 10 > 10) {
+          gsap.to(enemy, {
+            radius: enemy.radius - 10,
+          });
+          setTimeout(() => {
+            projectiles.splice(projectileIdx, 1);
+          }, 0);
+        } else {
+          setTimeout(() => {
+            enemies.splice(enemyIdx, 1);
+            projectiles.splice(projectileIdx, 1);
+          }, 0);
+        }
       }
     });
   });
