@@ -1,5 +1,8 @@
 const canvas = document.querySelector('#canvas');
-const scoreElement = document.querySelector('#score');
+const scoreText = document.querySelector('#score');
+const modalScoreText = document.querySelector('#modal-score');
+const startBtn = document.querySelector('#btn-start');
+const modal = document.querySelector('#modal');
 
 const ctx = canvas.getContext('2d');
 
@@ -103,11 +106,20 @@ class Particle {
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
-const player = new Player(x, y, 10, 'white');
+let player = new Player(x, y, 10, 'white');
+let projectiles = [];
+let enemies = [];
+let particles = [];
 
-const projectiles = [];
-const enemies = [];
-const particles = [];
+const init = () => {
+  player = new Player(x, y, 10, 'white');
+  projectiles = [];
+  enemies = [];
+  particles = [];
+  score = 0;
+  scoreText.innerText = '000';
+  modalScoreText.innerText = '000';
+};
 
 const spawnEnemies = () => {
   setInterval(() => {
@@ -176,6 +188,8 @@ const animate = () => {
 
     if (playerEnemydist - enemy.radius - player.radius < 1) {
       cancelAnimationFrame(animationId);
+      modalScoreText.innerText = score;
+      modal.classList.remove('hidden');
     }
 
     projectiles.forEach((projectile, projectileIdx) => {
@@ -188,7 +202,7 @@ const animate = () => {
       if (projectileEnemydist - enemy.radius - projectile.radius < 1) {
         // increase score
         score += 100;
-        scoreElement.innerText = score;
+        scoreText.innerText = score;
 
         // create explosion
         for (let i = 0; i < enemy.radius * 2; i++) {
@@ -209,7 +223,7 @@ const animate = () => {
         // shrink enemies on hit
         if (enemy.radius - 10 > 5) {
           score += 100;
-          scoreElement.innerText = score;
+          scoreText.innerText = score;
 
           gsap.to(enemy, {
             radius: enemy.radius - 10,
@@ -219,7 +233,7 @@ const animate = () => {
           }, 0);
         } else {
           score += 250;
-          scoreElement.innerText = score;
+          scoreText.innerText = score;
           setTimeout(() => {
             enemies.splice(enemyIdx, 1);
             projectiles.splice(projectileIdx, 1);
@@ -246,5 +260,9 @@ addEventListener('click', (event) => {
   );
 });
 
-animate();
-spawnEnemies();
+startBtn.addEventListener('click', () => {
+  init();
+  animate();
+  spawnEnemies();
+  modal.classList.add('hidden');
+});

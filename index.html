@@ -4,21 +4,50 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bubble Shoot</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Play:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       body,
       html,
       :root {
         height: 100%;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: 'Play', sans-serif;
       }
     </style>
   </head>
-  <body>
+  <body class="bg-gray-950">
     <div
-      class="absolute top-4 right-4 z-50 bg-white/10 py-1 px-2 text-2xl font-bold rounded-md text-center text-white select-none"
+      class="absolute top-4 right-4 z-50 bg-gray-900 py-1 px-2 text-2xl font-bold rounded-md text-center text-white select-none tracking-wide"
     >
       <span id="score">000</span>
     </div>
+
+    <div
+      id="modal"
+      class="absolute z-[99] flex items-center justify-center inset-0 border-red-500"
+    >
+      <div
+        class="bg-gray-900 max-w-sm w-full rounded-xl p-10 text-white text-center flex flex-col items-center gap-6"
+      >
+        <div class="space-y-1">
+          <p id="modal-score" class="text-5xl font-bold tracking-wide">000</p>
+          <span class="text-lg font-semibold uppercase tracking-wider"
+            >Points</span
+          >
+        </div>
+        <button
+          id="btn-start"
+          class="bg-violet-700 text-white rounded-md px-4 py-2 font-semibold hover:bg-violet-600 transition-colors w-40 uppercase"
+        >
+          Start
+        </button>
+      </div>
+    </div>
+
     <canvas id="canvas" class="w-full h-full"></canvas>
 
     <!-- scripts -->
