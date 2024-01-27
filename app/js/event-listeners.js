@@ -9,3 +9,20 @@ addEventListener('click', (event) => {
     y: Math.sin(angle) * 5,
   };
 });
+
+addEventListener('keydown', (event) => {
+  switch (event.code) {
+    case 'KeyW':
+      socket.emit('PLAYER_MOVE', 'KeyW');
+      break;
+    case 'KeyA':
+      socket.emit('PLAYER_MOVE', 'KeyA');
+      break;
+    case 'KeyS':
+      socket.emit('PLAYER_MOVE', 'KeyS');
+      break;
+    case 'KeyD':
+      socket.emit('PLAYER_MOVE', 'KeyD');
+      break;
+  }
+});

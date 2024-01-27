@@ -24,6 +24,9 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
         radius: 10,
         color: serverPlayer.color,
       });
+    } else {
+      clientPlayers[id].x = serverPlayer.x;
+      clientPlayers[id].y = serverPlayer.y;
     }
   }
 

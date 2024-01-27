@@ -29,7 +29,29 @@ io.on('connection', (socket) => {
     delete serverPlayers[socket.id];
     io.emit('PLAYER_UPDATE', serverPlayers);
   });
+
+  socket.on('PLAYER_MOVE', (pressedKey) => {
+    switch (pressedKey) {
+      case 'KeyW':
+        serverPlayers[socket.id].y -= 5;
+        break;
+      case 'KeyA':
+        serverPlayers[socket.id].x -= 5;
+
+        break;
+      case 'KeyS':
+        serverPlayers[socket.id].y += 5;
+        break;
+      case 'KeyD':
+        serverPlayers[socket.id].x += 5;
+        break;
+    }
+  });
 });
+
+setInterval(() => {
+  io.emit('PLAYER_UPDATE', serverPlayers);
+}, 15);
 
 server.listen(PORT, () =>
   console.log(`server running on http://localhost:${PORT}`)
