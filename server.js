@@ -14,21 +14,20 @@ app.get('/', (_, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-const players = {};
+const serverPlayers = {};
 
 io.on('connection', (socket) => {
-  console.log('player connected: ', socket.id);
-
-  players[socket.id] = {
+  serverPlayers[socket.id] = {
     x: Math.random() * 500,
     y: Math.random() * 500,
+    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
   };
 
-  io.emit('PLAYER_JOIN', players);
+  io.emit('PLAYER_UPDATE', serverPlayers);
 
   socket.on('disconnect', () => {
-    delete players[socket.id];
-    io.emit('PLAYER_LEAVE', players);
+    delete serverPlayers[socket.id];
+    io.emit('PLAYER_UPDATE', serverPlayers);
   });
 });
 

@@ -1,32 +1,35 @@
 const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
 
+const devicePixelRatio = window.devicePixelRatio || 1;
+
 const socket = io();
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+canvas.width = innerWidth * devicePixelRatio;
+canvas.height = innerHeight * devicePixelRatio;
 
 const x = canvas.width / 2;
 const y = canvas.height / 2;
 
-// const player = new Player(x, y, 10, 'white');
+const clientPlayers = {};
 
-const players = {};
-
-socket.on('PLAYER_JOIN', (serverPlayers) => {
+socket.on('PLAYER_UPDATE', (serverPlayers) => {
   // update players on frontend
   for (const id in serverPlayers) {
     const serverPlayer = serverPlayers[id];
-    if (!players[id]) {
-      players[id] = new Player(serverPlayer.x, serverPlayer.y, 10, 'white');
+    if (!clientPlayers[id]) {
+      clientPlayers[id] = new Player({
+        x: serverPlayer.x,
+        y: serverPlayer.y,
+        radius: 10,
+        color: serverPlayer.color,
+      });
     }
   }
-});
 
-socket.on('PLAYER_LEAVE', (serverPlayers) => {
-  for (const id in players) {
+  for (const id in clientPlayers) {
     if (!serverPlayers[id]) {
-      delete players[id];
+      delete clientPlayers[id];
     }
   }
 });
@@ -38,9 +41,9 @@ const animate = () => {
   ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  for (const id in players) {
-    const player = players[id];
-    player.draw();
+  for (const id in clientPlayers) {
+    const clientPlayer = clientPlayers[id];
+    clientPlayer.draw();
   }
 };
 
