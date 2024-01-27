@@ -26,28 +26,6 @@
       <span id="score">000</span>
     </div>
 
-    <div
-      id="modal"
-      class="absolute z-[99] flex items-center justify-center inset-0 border-red-500"
-    >
-      <div
-        class="bg-gray-900 max-w-sm w-full rounded-xl p-10 text-white text-center flex flex-col items-center gap-6"
-      >
-        <div class="space-y-1">
-          <p id="modal-score" class="text-5xl font-bold tracking-wide">000</p>
-          <span class="text-lg font-semibold uppercase tracking-wider"
-            >Points</span
-          >
-        </div>
-        <button
-          id="btn-start"
-          class="bg-violet-700 text-white rounded-md px-4 py-2 font-semibold hover:bg-violet-600 transition-colors w-40 uppercase"
-        >
-          Start
-        </button>
-      </div>
-    </div>
-
     <canvas id="canvas" class="w-full h-full"></canvas>
 
     <!-- scripts -->
@@ -58,6 +36,11 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
-    <script src="./js/script.js"></script>
+    <script src="./js/classes/enemy.js"></script>
+    <script src="./js/classes/particle.js"></script>
+    <script src="./js/classes/player.js"></script>
+    <script src="./js/classes/projectile.js"></script>
+    <script src="./js/event-listeners.js"></script>
+    <script src="./js/index.js"></script>
   </body>
 </html>
