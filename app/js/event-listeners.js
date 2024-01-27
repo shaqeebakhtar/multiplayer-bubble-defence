@@ -10,19 +10,76 @@ addEventListener('click', (event) => {
   };
 });
 
+const SPEED = 10;
+
+const keys = {
+  w: {
+    pressed: false,
+  },
+  a: {
+    pressed: false,
+  },
+  s: {
+    pressed: false,
+  },
+  d: {
+    pressed: false,
+  },
+};
+
+setInterval(() => {
+  if (keys.w.pressed) {
+    clientPlayers[socket.id].y -= SPEED;
+    socket.emit('PLAYER_MOVE', 'KeyW');
+  }
+  if (keys.a.pressed) {
+    clientPlayers[socket.id].x -= SPEED;
+    socket.emit('PLAYER_MOVE', 'KeyA');
+  }
+  if (keys.s.pressed) {
+    clientPlayers[socket.id].y += SPEED;
+    socket.emit('PLAYER_MOVE', 'KeyS');
+  }
+  if (keys.d.pressed) {
+    clientPlayers[socket.id].x += SPEED;
+    socket.emit('PLAYER_MOVE', 'KeyD');
+  }
+}, 15);
+
 addEventListener('keydown', (event) => {
+  if (!clientPlayers[socket.id]) return;
+
   switch (event.code) {
     case 'KeyW':
-      socket.emit('PLAYER_MOVE', 'KeyW');
+      keys.w.pressed = true;
       break;
     case 'KeyA':
-      socket.emit('PLAYER_MOVE', 'KeyA');
+      keys.a.pressed = true;
       break;
     case 'KeyS':
-      socket.emit('PLAYER_MOVE', 'KeyS');
+      keys.s.pressed = true;
       break;
     case 'KeyD':
-      socket.emit('PLAYER_MOVE', 'KeyD');
+      keys.d.pressed = true;
+      break;
+  }
+});
+
+addEventListener('keyup', (event) => {
+  if (!clientPlayers[socket.id]) return;
+
+  switch (event.code) {
+    case 'KeyW':
+      keys.w.pressed = false;
+      break;
+    case 'KeyA':
+      keys.a.pressed = false;
+      break;
+    case 'KeyS':
+      keys.s.pressed = false;
+      break;
+    case 'KeyD':
+      keys.d.pressed = false;
       break;
   }
 });

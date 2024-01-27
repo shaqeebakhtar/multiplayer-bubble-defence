@@ -15,6 +15,7 @@ app.get('/', (_, res) => {
 });
 
 const serverPlayers = {};
+const SPEED = 10;
 
 io.on('connection', (socket) => {
   serverPlayers[socket.id] = {
@@ -33,17 +34,17 @@ io.on('connection', (socket) => {
   socket.on('PLAYER_MOVE', (pressedKey) => {
     switch (pressedKey) {
       case 'KeyW':
-        serverPlayers[socket.id].y -= 5;
+        serverPlayers[socket.id].y -= SPEED;
         break;
       case 'KeyA':
-        serverPlayers[socket.id].x -= 5;
+        serverPlayers[socket.id].x -= SPEED;
 
         break;
       case 'KeyS':
-        serverPlayers[socket.id].y += 5;
+        serverPlayers[socket.id].y += SPEED;
         break;
       case 'KeyD':
-        serverPlayers[socket.id].x += 5;
+        serverPlayers[socket.id].x += SPEED;
         break;
     }
   });
