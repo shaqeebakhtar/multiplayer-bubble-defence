@@ -43,8 +43,12 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
         });
       } else {
         // for other players position
-        clientPlayers[id].x = serverPlayer.x;
-        clientPlayers[id].y = serverPlayer.y;
+        gsap.to(clientPlayers[id], {
+          x: serverPlayer.x,
+          y: serverPlayer.y,
+          duration: 0.015,
+          ease: 'linear',
+        });
       }
     }
   }
