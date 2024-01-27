@@ -25,8 +25,27 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
         color: serverPlayer.color,
       });
     } else {
-      clientPlayers[id].x = serverPlayer.x;
-      clientPlayers[id].y = serverPlayer.y;
+      if (id === socket.id) {
+        // for self player position
+        clientPlayers[id].x = serverPlayer.x;
+        clientPlayers[id].y = serverPlayer.y;
+
+        const lastProcessedInputIdx = playerInputs.findIndex((input) => {
+          return serverPlayer.sequenceNumber === input.sequenceNumber;
+        });
+
+        if (lastProcessedInputIdx > -1)
+          playerInputs.splice(0, lastProcessedInputIdx + 1);
+
+        playerInputs.forEach((input) => {
+          clientPlayers[id].x += input.dx;
+          clientPlayers[id].y += input.dy;
+        });
+      } else {
+        // for other players position
+        clientPlayers[id].x = serverPlayer.x;
+        clientPlayers[id].y = serverPlayer.y;
+      }
     }
   }
 

@@ -22,6 +22,7 @@ io.on('connection', (socket) => {
     x: Math.random() * 500,
     y: Math.random() * 500,
     color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+    sequenceNumber: 0,
   };
 
   io.emit('PLAYER_UPDATE', serverPlayers);
@@ -31,8 +32,9 @@ io.on('connection', (socket) => {
     io.emit('PLAYER_UPDATE', serverPlayers);
   });
 
-  socket.on('PLAYER_MOVE', (pressedKey) => {
-    switch (pressedKey) {
+  socket.on('PLAYER_MOVE', ({ keyCode, sequenceNumber }) => {
+    serverPlayers[socket.id].sequenceNumber = sequenceNumber;
+    switch (keyCode) {
       case 'KeyW':
         serverPlayers[socket.id].y -= SPEED;
         break;

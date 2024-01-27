@@ -27,22 +27,39 @@ const keys = {
   },
 };
 
+const playerInputs = [];
+let sequenceNumber = 0;
+
+// dx - velocity in horizontal direction
+// dy - velocity in vertical direction
+
 setInterval(() => {
   if (keys.w.pressed) {
+    sequenceNumber++;
+    playerInputs.push({ sequenceNumber, dx: 0, dy: -SPEED });
     clientPlayers[socket.id].y -= SPEED;
-    socket.emit('PLAYER_MOVE', 'KeyW');
+    socket.emit('PLAYER_MOVE', { keyCode: 'KeyW', sequenceNumber });
   }
+
   if (keys.a.pressed) {
+    sequenceNumber++;
+    playerInputs.push({ sequenceNumber, dx: -SPEED, dy: 0 });
     clientPlayers[socket.id].x -= SPEED;
-    socket.emit('PLAYER_MOVE', 'KeyA');
+    socket.emit('PLAYER_MOVE', { keyCode: 'KeyA', sequenceNumber });
   }
+
   if (keys.s.pressed) {
+    sequenceNumber++;
+    playerInputs.push({ sequenceNumber, dx: 0, dy: SPEED });
     clientPlayers[socket.id].y += SPEED;
-    socket.emit('PLAYER_MOVE', 'KeyS');
+    socket.emit('PLAYER_MOVE', { keyCode: 'KeyS', sequenceNumber });
   }
+
   if (keys.d.pressed) {
+    sequenceNumber++;
+    playerInputs.push({ sequenceNumber, dx: SPEED, dy: 0 });
     clientPlayers[socket.id].x += SPEED;
-    socket.emit('PLAYER_MOVE', 'KeyD');
+    socket.emit('PLAYER_MOVE', { keyCode: 'KeyD', sequenceNumber });
   }
 }, 15);
 
