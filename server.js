@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server);
+const io = new Server(server, { pingInterval: 2000, pingTimeout: 5000 });
 
 const PORT = 3000;
 
@@ -20,12 +20,16 @@ io.on('connection', (socket) => {
   console.log('player connected: ', socket.id);
 
   players[socket.id] = {
-    x: 55,
-    y: 955,
-    color: 'red',
+    x: Math.random() * 500,
+    y: Math.random() * 500,
   };
 
-  io.emit('PLAYER_JOINED', players);
+  io.emit('PLAYER_JOIN', players);
+
+  socket.on('disconnect', () => {
+    delete players[socket.id];
+    io.emit('PLAYER_LEAVE', players);
+  });
 });
 
 server.listen(PORT, () =>
