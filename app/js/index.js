@@ -14,6 +14,10 @@ const y = canvas.height / 2;
 const clientPlayers = {};
 const clientProjectiles = {};
 
+socket.on('connect', () => {
+  socket.emit('CANVAS_INIT', { width: canvas.width, height: canvas.height });
+});
+
 socket.on('PLAYER_UPDATE', (serverPlayers) => {
   // update players on frontend
   for (const id in serverPlayers) {
@@ -76,6 +80,12 @@ socket.on('PROJECTILE_UPDATE', (serverProjectiles) => {
     } else {
       clientProjectiles[id].x += serverProjectile.velocity.x;
       clientProjectiles[id].y += serverProjectile.velocity.y;
+    }
+  }
+
+  for (const clientProjectileId in clientProjectiles) {
+    if (!serverProjectiles[clientProjectileId]) {
+      delete clientProjectiles[clientProjectileId];
     }
   }
 });

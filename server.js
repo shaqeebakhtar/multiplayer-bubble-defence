@@ -20,6 +20,8 @@ const SPEED = 10;
 const serverProjectiles = {};
 let projectileId = 0;
 
+const PROJECTILE_RADIUS = 5;
+
 io.on('connection', (socket) => {
   serverPlayers[socket.id] = {
     x: Math.random() * 500,
@@ -30,9 +32,11 @@ io.on('connection', (socket) => {
 
   io.emit('PLAYER_UPDATE', serverPlayers);
 
-  socket.on('disconnect', () => {
-    delete serverPlayers[socket.id];
-    io.emit('PLAYER_UPDATE', serverPlayers);
+  socket.on('CANVAS_INIT', ({ width, height }) => {
+    serverPlayers[socket.id].canvas = {
+      width,
+      height,
+    };
   });
 
   socket.on('PLAYER_MOVE', ({ keyCode, sequenceNumber }) => {
@@ -69,6 +73,11 @@ io.on('connection', (socket) => {
       playerId: socket.id,
     };
   });
+
+  socket.on('disconnect', () => {
+    delete serverPlayers[socket.id];
+    io.emit('PLAYER_UPDATE', serverPlayers);
+  });
 });
 
 setInterval(() => {
@@ -76,6 +85,17 @@ setInterval(() => {
   for (const id in serverProjectiles) {
     serverProjectiles[id].x += serverProjectiles[id].velocity.x;
     serverProjectiles[id].y += serverProjectiles[id].velocity.y;
+
+    if (
+      serverProjectiles[id].x - PROJECTILE_RADIUS >=
+        serverPlayers[serverProjectiles[id].playerId]?.canvas.width ||
+      serverProjectiles[id].y - PROJECTILE_RADIUS >=
+        serverPlayers[serverProjectiles[id].playerId]?.canvas.height ||
+      serverProjectiles[id].x + PROJECTILE_RADIUS <= 0 ||
+      serverProjectiles[id].y + PROJECTILE_RADIUS <= 0
+    ) {
+      delete serverProjectiles[id];
+    }
   }
 
   io.emit('PROJECTILE_UPDATE', serverProjectiles);
