@@ -12,6 +12,7 @@ const x = canvas.width / 2;
 const y = canvas.height / 2;
 
 const clientPlayers = {};
+const clientProjectiles = {};
 
 socket.on('PLAYER_UPDATE', (serverPlayers) => {
   // update players on frontend
@@ -60,6 +61,25 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
   }
 });
 
+socket.on('PROJECTILE_UPDATE', (serverProjectiles) => {
+  for (const id in serverProjectiles) {
+    const serverProjectile = serverProjectiles[id];
+
+    if (!clientProjectiles[id]) {
+      clientProjectiles[id] = new Projectile({
+        x: serverProjectile.x,
+        y: serverProjectile.y,
+        radius: 5,
+        color: clientPlayers[serverProjectile.playerId]?.color,
+        velocity: serverProjectile.velocity,
+      });
+    } else {
+      clientProjectiles[id].x += serverProjectile.velocity.x;
+      clientProjectiles[id].y += serverProjectile.velocity.y;
+    }
+  }
+});
+
 let animationId;
 
 const animate = () => {
@@ -70,6 +90,11 @@ const animate = () => {
   for (const id in clientPlayers) {
     const clientPlayer = clientPlayers[id];
     clientPlayer.draw();
+  }
+
+  for (const id in clientProjectiles) {
+    const clientProjectile = clientProjectiles[id];
+    clientProjectile.draw();
   }
 };
 

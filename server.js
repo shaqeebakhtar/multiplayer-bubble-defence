@@ -17,6 +17,9 @@ app.get('/', (_, res) => {
 const serverPlayers = {};
 const SPEED = 10;
 
+const serverProjectiles = {};
+let projectileId = 0;
+
 io.on('connection', (socket) => {
   serverPlayers[socket.id] = {
     x: Math.random() * 500,
@@ -50,9 +53,32 @@ io.on('connection', (socket) => {
         break;
     }
   });
+
+  socket.on('PLAYER_SHOOT', ({ x, y, angle }) => {
+    projectileId++;
+
+    const velocity = {
+      x: Math.cos(angle) * 5,
+      y: Math.sin(angle) * 5,
+    };
+
+    serverProjectiles[projectileId] = {
+      x,
+      y,
+      velocity,
+      playerId: socket.id,
+    };
+  });
 });
 
 setInterval(() => {
+  // update projectile positions
+  for (const id in serverProjectiles) {
+    serverProjectiles[id].x += serverProjectiles[id].velocity.x;
+    serverProjectiles[id].y += serverProjectiles[id].velocity.y;
+  }
+
+  io.emit('PROJECTILE_UPDATE', serverProjectiles);
   io.emit('PLAYER_UPDATE', serverPlayers);
 }, 15);
 
