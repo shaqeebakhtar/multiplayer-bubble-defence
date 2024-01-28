@@ -1,7 +1,7 @@
 addEventListener('click', (event) => {
   const playerPosition = {
-    x: clientPlayers[socket.id].x,
-    y: clientPlayers[socket.id].y,
+    x: clientPlayers[socket.id]?.x,
+    y: clientPlayers[socket.id]?.y,
   };
 
   const angle = Math.atan2(

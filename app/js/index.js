@@ -15,7 +15,11 @@ const clientPlayers = {};
 const clientProjectiles = {};
 
 socket.on('connect', () => {
-  socket.emit('CANVAS_INIT', { width: canvas.width, height: canvas.height });
+  socket.emit('CANVAS_INIT', {
+    width: canvas.width,
+    height: canvas.height,
+    devicePixelRatio,
+  });
 });
 
 socket.on('PLAYER_UPDATE', (serverPlayers) => {

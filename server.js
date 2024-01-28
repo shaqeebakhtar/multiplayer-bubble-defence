@@ -21,6 +21,7 @@ const serverProjectiles = {};
 let projectileId = 0;
 
 const PROJECTILE_RADIUS = 5;
+const PLAYER_RADIUS = 5;
 
 io.on('connection', (socket) => {
   serverPlayers[socket.id] = {
@@ -32,11 +33,17 @@ io.on('connection', (socket) => {
 
   io.emit('PLAYER_UPDATE', serverPlayers);
 
-  socket.on('CANVAS_INIT', ({ width, height }) => {
+  socket.on('CANVAS_INIT', ({ width, height, devicePixelRatio }) => {
     serverPlayers[socket.id].canvas = {
       width,
       height,
     };
+
+    serverPlayers[socket.id].radius = PLAYER_RADIUS;
+
+    if (devicePixelRatio > 1) {
+      serverPlayers[socket.id].radius = 2 * PLAYER_RADIUS;
+    }
   });
 
   socket.on('PLAYER_MOVE', ({ keyCode, sequenceNumber }) => {
@@ -95,6 +102,25 @@ setInterval(() => {
       serverProjectiles[id].y + PROJECTILE_RADIUS <= 0
     ) {
       delete serverProjectiles[id];
+      continue;
+    }
+
+    for (const playerId in serverPlayers) {
+      const serverPlayer = serverPlayers[playerId];
+
+      const playerProjectileDist = Math.hypot(
+        serverProjectiles[id]?.x - serverPlayer.x,
+        serverProjectiles[id]?.y - serverPlayer.y
+      );
+
+      if (
+        playerProjectileDist < PROJECTILE_RADIUS + serverPlayer.radius &&
+        serverProjectiles[id].playerId !== playerId
+      ) {
+        delete serverProjectiles[id];
+        delete serverPlayers[playerId];
+        break;
+      }
     }
   }
 
