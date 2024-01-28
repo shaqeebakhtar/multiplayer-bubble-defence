@@ -21,9 +21,49 @@
   </head>
   <body class="bg-gray-950">
     <div
-      class="absolute top-4 right-4 z-50 bg-gray-900 py-1 px-2 text-2xl font-bold rounded-md text-center text-white select-none tracking-wide"
+      class="absolute bottom-4 left-4 z-50 bg-white/10 py-1 px-2 text-sm rounded-sm text-white/80 select-none font-light space-y-0.5"
     >
-      <span id="score">000</span>
+      <div>
+        <span>Score :</span>
+        <span>5550</span>
+      </div>
+      <div>
+        <span>Rank :</span>
+        <span>16 / 26</span>
+      </div>
+    </div>
+    <div
+      class="absolute top-4 right-4 z-50 bg-white/10 py-2 px-3 text-sm rounded-sm text-white/80 select-none font-light space-y-2"
+    >
+      <div class="flex items-center gap-2">
+        <span class="text-yellow-500"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-trophy w-4 h-4"
+          >
+            <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+            <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
+            <path d="M4 22h16" />
+            <path
+              d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"
+            />
+            <path
+              d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"
+            />
+            <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
+          </svg>
+        </span>
+        <span class="font-bold">Leaderboard</span>
+      </div>
+      <ol id="leaderboard" class="list-decimal space-y-0.5 ml-3.5"></ol>
     </div>
 
     <canvas id="canvas" class="w-full h-full"></canvas>

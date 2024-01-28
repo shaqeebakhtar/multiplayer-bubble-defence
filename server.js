@@ -29,6 +29,7 @@ io.on('connection', (socket) => {
     y: Math.random() * 500,
     color: `hsl(${Math.random() * 360}, 100%, 50%)`,
     sequenceNumber: 0,
+    score: 0,
   };
 
   io.emit('PLAYER_UPDATE', serverPlayers);
@@ -113,12 +114,16 @@ setInterval(() => {
         serverProjectiles[id]?.y - serverPlayer.y
       );
 
+      // projectile and player collision
       if (
         playerProjectileDist < PROJECTILE_RADIUS + serverPlayer.radius &&
         serverProjectiles[id].playerId !== playerId
       ) {
+        if (serverPlayers[serverProjectiles[id].playerId])
+          serverPlayers[serverProjectiles[id]?.playerId].score += 50;
         delete serverProjectiles[id];
         delete serverPlayers[playerId];
+
         break;
       }
     }

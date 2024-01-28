@@ -1,3 +1,5 @@
+const leaderboard = document.querySelector('#leaderboard');
+
 const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
 
@@ -33,7 +35,22 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
         radius: 10,
         color: serverPlayer.color,
       });
+
+      leaderboard.innerHTML += `
+        <li data-player='${id}'>
+          <div class="flex items-center justify-between gap-3">
+            <span class="max-w-40 truncate">${id}</span>
+            <span data-score>${serverPlayer.score}</span>
+          </div>
+        </li>
+      `;
     } else {
+      const playerScoreToUpdate = leaderboard.querySelector(
+        `[data-player='${id}'] [data-score]`
+      );
+
+      playerScoreToUpdate.innerHTML = `${serverPlayers[id].score}`;
+
       if (id === socket.id) {
         // for self player position
         clientPlayers[id].x = serverPlayer.x;
@@ -62,8 +79,12 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
     }
   }
 
+  // handle player disconnection
   for (const id in clientPlayers) {
     if (!serverPlayers[id]) {
+      const playerToRemove = leaderboard.querySelector(`[data-player='${id}']`);
+      leaderboard.removeChild(playerToRemove);
+
       delete clientPlayers[id];
     }
   }
