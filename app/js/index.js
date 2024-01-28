@@ -44,12 +44,26 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
           </div>
         </li>
       `;
+      console.log(`text-[${serverPlayer.color}]`);
     } else {
       const playerScoreToUpdate = leaderboard.querySelector(
         `[data-player='${id}'] [data-score]`
       );
-
       playerScoreToUpdate.innerHTML = `${serverPlayers[id].score}`;
+
+      // sort leaderboard
+      const leaderboardPlayers = Array.from(
+        document.querySelectorAll('#leaderboard li')
+      );
+      leaderboardPlayers.sort((a, b) => {
+        const scoreA = parseInt(a.querySelector('[data-score]').textContent);
+        const scoreB = parseInt(b.querySelector('[data-score]').textContent);
+
+        return scoreB - scoreA;
+      });
+
+      leaderboard.innerHTML = '';
+      leaderboardPlayers.forEach((player) => leaderboard.appendChild(player));
 
       if (id === socket.id) {
         // for self player position
