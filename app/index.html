@@ -19,21 +19,26 @@
       }
     </style>
   </head>
-  <body class="bg-gray-950">
+  <body class="bg-gray-100">
     <div
-      class="absolute bottom-4 left-4 z-50 bg-white/10 py-1 px-2 text-sm rounded-sm text-white/80 select-none font-light space-y-0.5"
+      id="player-score"
+      class="hidden absolute bottom-4 left-4 z-50 bg-teal-500/[0.05] border border-dashed border-teal-500/25 py-1 px-2 text-sm rounded-sm text-white/80 select-none font-light space-y-0.5"
     >
-      <div>
-        <span>Score :</span>
-        <span>5550</span>
+      <div class="flex gap-2">
+        <span class="w-8 font-bold">Score</span>
+        <span>:</span>
+        <span id="self-score">00</span>
       </div>
-      <div>
-        <span>Rank :</span>
-        <span>16 / 26</span>
+      <div class="flex gap-2">
+        <span class="w-8 font-bold">Rank</span>
+        <span>:</span>
+        <span>NA / NA</span>
       </div>
     </div>
+
     <div
-      class="absolute top-4 right-4 z-50 bg-white/10 py-2 px-3 text-sm rounded-sm text-white/80 select-none font-light space-y-2"
+      id="player-leaderboard"
+      class="hidden absolute top-4 right-4 z-50 bg-teal-500/[0.05] border border-dashed border-teal-500/25 py-2 px-3 text-sm rounded-sm text-white/80 select-none font-light space-y-2"
     >
       <div class="flex items-center gap-2">
         <span class="text-yellow-500"
@@ -68,6 +73,31 @@
 
     <canvas id="canvas" class="w-full h-full"></canvas>
 
+    <div
+      class="absolute inset-0 z-50 flex items-center justify-center"
+      id="player-nickname"
+    >
+      <div
+        class="bg-teal-500/[0.05] rounded-sm w-full max-w-sm p-8 border border-teal-500/25"
+      >
+        <form class="w-full" id="nickname-form">
+          <div class="flex gap-0 items-center">
+            <input
+              id="nickname"
+              class="w-full py-1.5 px-2 h-10 outline-none rounded-l-sm bg-teal-50 text-teal-950 placeholder:text-teal-950/50 border-2 border-teal-500 border-r-0"
+              type="text"
+              placeholder="Nickname"
+            />
+            <button
+              type="submit"
+              class="bg-teal-500/10 hover:bg-teal-500/30 text-teal-500 font-bold text-xl cursor-pointer py-1 px-3 h-10 rounded-r-sm border-2 border-l-0 border-teal-500"
+            >
+              Play
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
     <!-- scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script

@@ -1,7 +1,9 @@
+const nicknameForm = document.querySelector('#nickname-form');
+
 addEventListener('click', (event) => {
   const playerPosition = {
-    x: clientPlayers[socket.id]?.x,
-    y: clientPlayers[socket.id]?.y,
+    x: clientPlayers[socket?.id].x,
+    y: clientPlayers[socket?.id].y,
   };
 
   const angle = Math.atan2(
@@ -105,4 +107,22 @@ addEventListener('keyup', (event) => {
       keys.d.pressed = false;
       break;
   }
+});
+
+nicknameForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const playerNickname = nicknameForm.querySelector('#nickname').value;
+
+  if (!playerNickname) return;
+
+  socket.emit('PLAYER_JOIN', {
+    nickname: playerNickname,
+    width: canvas.width,
+    height: canvas.height,
+    devicePixelRatio,
+  });
+
+  document.querySelector('#player-nickname').classList.add('hidden');
+  document.querySelector('#player-score').classList.remove('hidden');
+  document.querySelector('#player-leaderboard').classList.remove('hidden');
 });

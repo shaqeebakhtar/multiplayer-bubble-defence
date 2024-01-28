@@ -16,14 +16,6 @@ const y = canvas.height / 2;
 const clientPlayers = {};
 const clientProjectiles = {};
 
-socket.on('connect', () => {
-  socket.emit('CANVAS_INIT', {
-    width: canvas.width,
-    height: canvas.height,
-    devicePixelRatio,
-  });
-});
-
 socket.on('PLAYER_UPDATE', (serverPlayers) => {
   // update players on frontend
   for (const id in serverPlayers) {
@@ -39,17 +31,20 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
       leaderboard.innerHTML += `
         <li data-player='${id}'>
           <div class="flex items-center justify-between gap-3">
-            <span class="max-w-40 truncate">${id}</span>
+            <span class="max-w-40 truncate">${serverPlayer.nickname}</span>
             <span data-score>${serverPlayer.score}</span>
           </div>
         </li>
       `;
-      console.log(`text-[${serverPlayer.color}]`);
     } else {
       const playerScoreToUpdate = leaderboard.querySelector(
         `[data-player='${id}'] [data-score]`
       );
       playerScoreToUpdate.innerHTML = `${serverPlayers[id].score}`;
+
+      document.querySelector(
+        '#self-score'
+      ).innerHTML = `${serverPlayers[id].score}`;
 
       // sort leaderboard
       const leaderboardPlayers = Array.from(
@@ -98,6 +93,13 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
     if (!serverPlayers[id]) {
       const playerToRemove = leaderboard.querySelector(`[data-player='${id}']`);
       leaderboard.removeChild(playerToRemove);
+
+      if (id === socket.id) {
+        console.log('me');
+        document.querySelector('#player-nickname').classList.remove('hidden');
+        document.querySelector('#player-score').classList.add('hidden');
+        document.querySelector('#player-leaderboard').classList.add('hidden');
+      }
 
       delete clientPlayers[id];
     }

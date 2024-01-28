@@ -24,17 +24,18 @@ const PROJECTILE_RADIUS = 5;
 const PLAYER_RADIUS = 5;
 
 io.on('connection', (socket) => {
-  serverPlayers[socket.id] = {
-    x: Math.random() * 500,
-    y: Math.random() * 500,
-    color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-    sequenceNumber: 0,
-    score: 0,
-  };
-
   io.emit('PLAYER_UPDATE', serverPlayers);
 
-  socket.on('CANVAS_INIT', ({ width, height, devicePixelRatio }) => {
+  socket.on('PLAYER_JOIN', ({ nickname, width, height, devicePixelRatio }) => {
+    serverPlayers[socket.id] = {
+      x: Math.random() * 500,
+      y: Math.random() * 500,
+      color: `hsl(${Math.random() * 360},100%,50%)`,
+      sequenceNumber: 0,
+      score: 0,
+      nickname,
+    };
+
     serverPlayers[socket.id].canvas = {
       width,
       height,
