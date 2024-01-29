@@ -137,8 +137,8 @@ let animationId;
 
 const animate = () => {
   animationId = requestAnimationFrame(animate);
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   for (const id in clientPlayers) {
     const clientPlayer = clientPlayers[id];
