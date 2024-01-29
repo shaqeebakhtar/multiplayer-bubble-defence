@@ -34,7 +34,7 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
       leaderboard.innerHTML += `
         <li data-player='${id}'>
           <div class="flex items-center justify-between gap-3">
-            <span class="max-w-40 truncate">${serverPlayer.nickname}</span>
+            <span class="w-44 truncate">${serverPlayer.nickname}</span>
             <span data-score>${serverPlayer.score}</span>
           </div>
         </li>
@@ -49,6 +49,10 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
         '#self-score'
       ).innerHTML = `${serverPlayers[id].score}`;
 
+      document.querySelector('#total-players').innerHTML = `${
+        Object.keys(serverPlayers).length
+      }`;
+
       // sort leaderboard
       const leaderboardPlayers = Array.from(
         document.querySelectorAll('#leaderboard li')
@@ -62,6 +66,12 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
 
       leaderboard.innerHTML = '';
       leaderboardPlayers.forEach((player) => leaderboard.appendChild(player));
+
+      const rank = leaderboardPlayers.findIndex(
+        (player) => player.dataset.player === socket.id
+      );
+
+      document.querySelector('#rank').innerHTML = `${rank + 1}`;
 
       clientPlayers[id].target = {
         x: serverPlayer.x,

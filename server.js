@@ -15,7 +15,7 @@ app.get('/', (_, res) => {
 });
 
 const serverPlayers = {};
-const SPEED = 8;
+const SPEED = 6;
 
 const serverProjectiles = {};
 let projectileId = 0;

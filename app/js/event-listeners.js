@@ -4,24 +4,26 @@ addEventListener('click', (event) => {
   const canvas = document.querySelector('#canvas');
   const { top, left } = canvas.getBoundingClientRect();
 
-  const playerPosition = {
-    x: clientPlayers[socket?.id].x,
-    y: clientPlayers[socket?.id].y,
-  };
+  if (clientPlayers[socket.id] && clientPlayers[socket.id]) {
+    const playerPosition = {
+      x: clientPlayers[socket?.id]?.x,
+      y: clientPlayers[socket?.id]?.y,
+    };
 
-  const angle = Math.atan2(
-    event.clientY - top - playerPosition.y,
-    event.clientX - left - playerPosition.x
-  );
+    const angle = Math.atan2(
+      event.clientY - top - playerPosition.y,
+      event.clientX - left - playerPosition.x
+    );
 
-  socket.emit('PLAYER_SHOOT', {
-    x: playerPosition.x,
-    y: playerPosition.y,
-    angle,
-  });
+    socket.emit('PLAYER_SHOOT', {
+      x: playerPosition.x,
+      y: playerPosition.y,
+      angle,
+    });
+  }
 });
 
-const SPEED = 8;
+const SPEED = 6;
 
 const keys = {
   w: {
