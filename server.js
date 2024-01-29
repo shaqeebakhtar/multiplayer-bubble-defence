@@ -45,14 +45,15 @@ io.on('connection', (socket) => {
   });
 
   socket.on('PLAYER_MOVE', ({ keyCode, sequenceNumber }) => {
-    serverPlayers[socket.id].sequenceNumber = sequenceNumber;
+    const serverPlayer = serverPlayers[socket.id];
+    serverPlayer.sequenceNumber = sequenceNumber;
+
     switch (keyCode) {
       case 'KeyW':
         serverPlayers[socket.id].y -= SPEED;
         break;
       case 'KeyA':
         serverPlayers[socket.id].x -= SPEED;
-
         break;
       case 'KeyS':
         serverPlayers[socket.id].y += SPEED;
@@ -61,6 +62,23 @@ io.on('connection', (socket) => {
         serverPlayers[socket.id].x += SPEED;
         break;
     }
+
+    const playerSides = {
+      left: serverPlayer.x - serverPlayer.radius,
+      right: serverPlayer.x + serverPlayer.radius,
+      top: serverPlayer.y - serverPlayer.radius,
+      bottom: serverPlayer.y + serverPlayer.radius,
+    };
+
+    if (playerSides.left < 0) serverPlayers[socket.id].x = serverPlayer.radius;
+
+    if (playerSides.right > 1024)
+      serverPlayers[socket.id].x = 1024 - serverPlayer.radius;
+
+    if (playerSides.top < 0) serverPlayers[socket.id].y = serverPlayer.radius;
+
+    if (playerSides.bottom > 576)
+      serverPlayers[socket.id].y = 576 - serverPlayer.radius;
   });
 
   socket.on('PLAYER_SHOOT', ({ x, y, angle }) => {

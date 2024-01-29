@@ -28,6 +28,7 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
         y: serverPlayer.y,
         radius: 10,
         color: serverPlayer.color,
+        nickname: serverPlayer.nickname,
       });
 
       leaderboard.innerHTML += `
