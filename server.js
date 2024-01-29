@@ -15,7 +15,7 @@ app.get('/', (_, res) => {
 });
 
 const serverPlayers = {};
-const SPEED = 10;
+const SPEED = 8;
 
 const serverProjectiles = {};
 let projectileId = 0;
@@ -46,6 +46,9 @@ io.on('connection', (socket) => {
 
   socket.on('PLAYER_MOVE', ({ keyCode, sequenceNumber }) => {
     const serverPlayer = serverPlayers[socket.id];
+
+    if (!serverPlayer) return;
+
     serverPlayer.sequenceNumber = sequenceNumber;
 
     switch (keyCode) {

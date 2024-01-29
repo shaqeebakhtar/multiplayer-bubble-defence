@@ -63,11 +63,12 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
       leaderboard.innerHTML = '';
       leaderboardPlayers.forEach((player) => leaderboard.appendChild(player));
 
-      if (id === socket.id) {
-        // for self player position
-        clientPlayers[id].x = serverPlayer.x;
-        clientPlayers[id].y = serverPlayer.y;
+      clientPlayers[id].target = {
+        x: serverPlayer.x,
+        y: serverPlayer.y,
+      };
 
+      if (id === socket.id) {
         const lastProcessedInputIdx = playerInputs.findIndex((input) => {
           return serverPlayer.sequenceNumber === input.sequenceNumber;
         });
@@ -76,16 +77,8 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
           playerInputs.splice(0, lastProcessedInputIdx + 1);
 
         playerInputs.forEach((input) => {
-          clientPlayers[id].x += input.dx;
-          clientPlayers[id].y += input.dy;
-        });
-      } else {
-        // for other players position
-        gsap.to(clientPlayers[id], {
-          x: serverPlayer.x,
-          y: serverPlayer.y,
-          duration: 0.015,
-          ease: 'linear',
+          clientPlayers[id].target.x += input.dx;
+          clientPlayers[id].target.y += input.dy;
         });
       }
     }
@@ -138,11 +131,19 @@ let animationId;
 
 const animate = () => {
   animationId = requestAnimationFrame(animate);
-  // ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   for (const id in clientPlayers) {
     const clientPlayer = clientPlayers[id];
+
+    if (clientPlayer.target) {
+      clientPlayers[id].x +=
+        (clientPlayers[id].target.x - clientPlayers[id].x) * 0.5;
+
+      clientPlayers[id].y +=
+        (clientPlayers[id].target.y - clientPlayers[id].y) * 0.5;
+    }
+
     clientPlayer.draw();
   }
 

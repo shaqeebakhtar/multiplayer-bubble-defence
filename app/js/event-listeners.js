@@ -21,7 +21,7 @@ addEventListener('click', (event) => {
   });
 });
 
-const SPEED = 10;
+const SPEED = 8;
 
 const keys = {
   w: {
