@@ -1,14 +1,17 @@
 const nicknameForm = document.querySelector('#nickname-form');
 
 addEventListener('click', (event) => {
+  const canvas = document.querySelector('#canvas');
+  const { top, left } = canvas.getBoundingClientRect();
+
   const playerPosition = {
     x: clientPlayers[socket?.id].x,
     y: clientPlayers[socket?.id].y,
   };
 
   const angle = Math.atan2(
-    event.clientY * window.devicePixelRatio - playerPosition.y,
-    event.clientX * window.devicePixelRatio - playerPosition.x
+    event.clientY - top - playerPosition.y,
+    event.clientX - left - playerPosition.x
   );
 
   socket.emit('PLAYER_SHOOT', {
@@ -119,7 +122,6 @@ nicknameForm.addEventListener('submit', (event) => {
     nickname: playerNickname,
     width: canvas.width,
     height: canvas.height,
-    devicePixelRatio,
   });
 
   document.querySelector('#player-nickname').classList.add('hidden');

@@ -7,8 +7,10 @@ const devicePixelRatio = window.devicePixelRatio || 1;
 
 const socket = io();
 
-canvas.width = innerWidth * devicePixelRatio;
-canvas.height = innerHeight * devicePixelRatio;
+canvas.width = 1024 * devicePixelRatio;
+canvas.height = 576 * devicePixelRatio;
+
+ctx.scale(devicePixelRatio, devicePixelRatio);
 
 const x = canvas.width / 2;
 const y = canvas.height / 2;

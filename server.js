@@ -26,10 +26,10 @@ const PLAYER_RADIUS = 5;
 io.on('connection', (socket) => {
   io.emit('PLAYER_UPDATE', serverPlayers);
 
-  socket.on('PLAYER_JOIN', ({ nickname, width, height, devicePixelRatio }) => {
+  socket.on('PLAYER_JOIN', ({ nickname, width, height }) => {
     serverPlayers[socket.id] = {
-      x: Math.random() * 500,
-      y: Math.random() * 500,
+      x: Math.random() * 1024,
+      y: Math.random() * 576,
       color: `hsl(${Math.random() * 360},100%,50%)`,
       sequenceNumber: 0,
       score: 0,
@@ -42,10 +42,6 @@ io.on('connection', (socket) => {
     };
 
     serverPlayers[socket.id].radius = PLAYER_RADIUS;
-
-    if (devicePixelRatio > 1) {
-      serverPlayers[socket.id].radius = 2 * PLAYER_RADIUS;
-    }
   });
 
   socket.on('PLAYER_MOVE', ({ keyCode, sequenceNumber }) => {
