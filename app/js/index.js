@@ -100,7 +100,6 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
         ).innerHTML = `${serverPlayers[id].score}`;
 
         clientTopRank = Math.min(rank + 1, clientTopRank);
-        console.log(rank + 1, clientTopRank);
       }
 
       clientPlayers[id].target = {
