@@ -1,4 +1,5 @@
 const leaderboard = document.querySelector('#leaderboard');
+const playerScoreEle = document.querySelector('#player-score');
 
 const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
@@ -17,6 +18,21 @@ const y = canvas.height / 2;
 
 const clientPlayers = {};
 const clientProjectiles = {};
+
+let clientTopRank = Number.MAX_VALUE;
+
+const calculateSurvivalTime = (playerJoiningTime, playerDisconnetionTime) => {
+  const timeDifference = playerDisconnetionTime - playerJoiningTime;
+
+  const totalSeconds = Math.floor(timeDifference / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+
+  return { minutes: formattedMinutes, seconds: formattedSeconds };
+};
 
 socket.on('PLAYER_UPDATE', (serverPlayers) => {
   // update players on frontend
@@ -39,19 +55,13 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
           </div>
         </li>
       `;
+
+      if (socket.id === id) playerScoreEle.setAttribute('data-player', `${id}`);
     } else {
       const playerScoreToUpdate = leaderboard.querySelector(
         `[data-player='${id}'] [data-score]`
       );
       playerScoreToUpdate.innerHTML = `${serverPlayers[id].score}`;
-
-      document.querySelector(
-        '#self-score'
-      ).innerHTML = `${serverPlayers[id].score}`;
-
-      document.querySelector('#total-players').innerHTML = `${
-        Object.keys(serverPlayers).length
-      }`;
 
       // sort leaderboard
       const leaderboardPlayers = Array.from(
@@ -71,7 +81,27 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
         (player) => player.dataset.player === socket.id
       );
 
-      document.querySelector('#rank').innerHTML = `${rank + 1}`;
+      // update player rank and score
+      if (socket.id === id) {
+        document.querySelector(
+          `[data-player='${id}']#player-score #self-score`
+        ).innerHTML = `${serverPlayers[id].score}`;
+
+        document.querySelector(
+          `[data-player='${id}']#player-score #rank`
+        ).innerHTML = `${rank + 1}`;
+
+        document.querySelector(
+          `[data-player='${id}']#player-score #total-players`
+        ).innerHTML = `${Object.keys(serverPlayers).length}`;
+
+        document.querySelector(
+          '#game-over__score'
+        ).innerHTML = `${serverPlayers[id].score}`;
+
+        clientTopRank = Math.min(rank + 1, clientTopRank);
+        console.log(rank + 1, clientTopRank);
+      }
 
       clientPlayers[id].target = {
         x: serverPlayer.x,
@@ -101,10 +131,22 @@ socket.on('PLAYER_UPDATE', (serverPlayers) => {
       leaderboard.removeChild(playerToRemove);
 
       if (id === socket.id) {
-        console.log('me');
+        playerDisconnetionTime = new Date();
+
+        const { minutes, seconds } = calculateSurvivalTime(
+          playerJoiningTime,
+          playerDisconnetionTime
+        );
+
         document.querySelector('#player-nickname').classList.remove('hidden');
         document.querySelector('#player-score').classList.add('hidden');
         document.querySelector('#player-leaderboard').classList.add('hidden');
+        document.querySelector('#game-over').classList.remove('hidden');
+        document.querySelector('#game-over__rank').innerHTML = clientTopRank;
+        document.querySelector(
+          '#game-over__survival'
+        ).innerHTML = `${minutes} min ${seconds} sec`;
+        clientTopRank = Number.MAX_VALUE;
       }
 
       delete clientPlayers[id];

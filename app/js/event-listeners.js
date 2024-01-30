@@ -114,6 +114,9 @@ addEventListener('keyup', (event) => {
   }
 });
 
+let playerJoiningTime;
+let playerDisconnetionTime;
+
 nicknameForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const playerNickname = nicknameForm.querySelector('#nickname').value;
@@ -125,6 +128,8 @@ nicknameForm.addEventListener('submit', (event) => {
     width: canvas.width,
     height: canvas.height,
   });
+
+  playerJoiningTime = new Date();
 
   document.querySelector('#player-nickname').classList.add('hidden');
   document.querySelector('#player-score').classList.remove('hidden');
